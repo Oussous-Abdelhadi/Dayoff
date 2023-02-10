@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte{% endblock %}
+
+{% block body %}
+<h4 class="fw-bold py-3 mb-4">Mon Compte</h4>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card mb-4">
+      <h5 class="card-header">Profile Details</h5>
+      <!-- Account -->
+      <hr class="my-0">
+      <div class="card-body">
+        <form id="formAccountSettings" method="POST" onsubmit="return false">
+          <div class="row">
+            <div class="mb-3 col-md-6">
+              <label for="Nom" class="form-label">Nom</label>
+              <input class="form-control" type="text" id="Nom" name="Nom" value="John" autofocus="">
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="Prénom" class="form-label">Prénom</label>
+              <input class="form-control" type="text" name="Prénom" id="Prénom" value="Doe">
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="email" class="form-label">E-mail</label>
+              <input class="form-control" type="text" id="email" name="email" value="john.doe@example.com" placeholder="john.doe@example.com">
+            </div>
+            <div class="mb-3 col-md-6">
+              <label for="organization" class="form-label">Mot de passe</label>
+                <input type="text" class="form-control" id="basic-default-password32" placeholder="············" aria-describedby="basic-default-password">
+            </div>
+          </div>
+          <div class="mt-2">
+            <button type="submit" class="btn btn-primary me-2">Sauvergarder les changements</button>
+            <button type="reset" class="btn btn-outline-secondary">Annuler</button>
+          </div>
+        </form>
+      </div>
+      <!-- /Account -->
+    </div>
+    <div class="card">
+      <h5 class="card-header">Supprimer le compte </h5>
+      <div class="card-body">
+        <div class="mb-3 col-12 mb-0">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading fw-bold mb-1">Est-ce que vous êtes sûr de vouloir supprimer votre compte ?</h6>
+            <p class="mb-0">Une fois que vous avez supprimé votre compte, il est impossible de revenir en arrière. Soyez-en sûr.</p>
+          </div>
+        </div>
+        <form id="formAccountDeactivation" onsubmit="return false">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation">
+            <label class="form-check-label" for="accountActivation">Je confirme la désactivation de mon compte</label>
+          </div>
+          <button type="submit" class="btn btn-danger deactivate-account">Désactiver le compte</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

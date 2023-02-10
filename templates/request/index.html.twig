@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande d'absence{% endblock %}
+
+{% block body %}
+<h4 class="fw-bold py-3 mb-4">Demande d'absence</h4>
+<div class="row">
+  <!-- Basic with Icons -->
+  <div class="col-xxl">
+    <div class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Informations personnels</h5> <small class="text-muted float-end">Merged input group</small>
+      </div>
+      <div class="card-body">
+        <form>
+        <div class="row mb-3">
+          <label for="defaultSelect" class="col-sm-2 col-form-label">Type de demande</label>
+            <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+              <select id="defaultSelect" class="form-select">
+                <option>Télétravail</option>
+                <option value="1">Présentiel</option>
+                <option value="2">Congées</option>
+                <option value="3">RTT</option>
+                <option value="4">Formation</option>
+                <option value="5">Congés maladies</option>
+                <option value="6">Congés parentaux</option>
+              </select>
+              </div>
+            </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="html5-date-input" class="col-sm-2 col-form-label">Date de début</label>
+          <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <input class="form-control" type="date" value="2021-06-18" id="html5-date-input">
+              </div>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="html5-date-input" class="col-sm-2 col-form-label">Date de fin</label>
+          <div class="col-sm-10">
+              <div class="input-group input-group-merge">
+                <input class="form-control" type="date" value="2021-06-18" id="html5-date-input">
+              </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Demi journée</label>
+              <div class="col-sm-10">
+                  <div class="form-check form-check-inline ">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Matin">
+                    <label class="form-check-label" for="inlineCheckbox1">Matin</label>
+                  </div>
+
+                <div class="form-check form-check-inline ">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Après-midi">
+                  <label class="form-check-label" for="inlineCheckbox1">Après-midi</label>
+                </div>
+
+              </div>
+          </div>
+        </div>
+
+          <div class="row mb-3 form-password-toggle">
+            <label class="col-sm-2 form-label" for="basic-default-password32">Mot de passe</label>
+            <div class="col-sm-10">
+            <div class="input-group input-group-merge">
+                <span class="input-group-text cursor-pointer" id="basic-default-password"><i class="bx bx-show"></i></span>
+                <input type="text" class="form-control" id="basic-default-password32" placeholder="············" aria-describedby="basic-default-password">
+            </div>
+          </div>
+        </div>
+
+          <div class="row justify-content-end">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
