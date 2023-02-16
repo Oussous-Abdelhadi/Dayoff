@@ -118,12 +118,17 @@ let menu, animate;
 })();
 
 
-let menuItems = document.querySelectorAll('.menu-item');
-console.log(menuItems);
-console.log("yes");
-menuItems.forEach(item => {
-    item.addEventListener('click', function() {
-        menuItems.forEach(item => item.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
+// var button = document.getElementById("toggle-dark-mode");
+
+// // Gestionnaire d'événements pour le clic sur le bouton
+// button.addEventListener("click", function() {
+//   // Récupération du corps du document
+//   var body = document.body;
+  
+//   // Ajout ou suppression de la classe dark-mode en fonction de sa présence actuelle
+//   if (body.classList.contains("dark-mode")) {
+//     body.classList.remove("dark-mode");
+//   } else {
+//     body.classList.add("dark-mode");
+//   }
+// });

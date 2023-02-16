@@ -6,8 +6,8 @@
       var email = document.getElementById("registration_form_email").value;
       var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       var password = document.getElementById("registration_form_password").value;
-    
-      if (!name.match(/^[a-zA-Z\s]+$/) || !firstname.match(/^[a-zA-Z\s]+$/)) {
+      // /^[a-zA-Z\s]+$/
+      if (!name.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/) || !firstname.match(/^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/)) {
         alert("Le nom et le prénom ne peuvent contenir que des lettres");
         event.preventDefault();
       } else if (name.length < 2 || firstname.length < 2) {
@@ -23,7 +23,6 @@
     });
   }
 
-// console.log('yes');
 
 
 if (window.location.pathname === '/register') {
