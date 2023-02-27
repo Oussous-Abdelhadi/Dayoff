@@ -23,8 +23,8 @@ class Request
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $half_day = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $half_day = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
@@ -32,7 +32,8 @@ class Request
     #[ORM\Column(length: 100)]
     private ?string $status = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'requests')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -76,12 +77,12 @@ class Request
         return $this;
     }
 
-    public function isHalfDay(): ?bool
+    public function isHalfDay(): ?string
     {
         return $this->half_day;
     }
 
-    public function setHalfDay(?bool $half_day): self
+    public function setHalfDay(?string $half_day): self
     {
         $this->half_day = $half_day;
 
@@ -123,4 +124,5 @@ class Request
 
         return $this;
     }
+
 }

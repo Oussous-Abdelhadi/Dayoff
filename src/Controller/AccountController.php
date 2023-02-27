@@ -21,9 +21,8 @@ class AccountController extends AbstractController
      UserPasswordHasherInterface $userPasswordHasher
      )
     {
-        $dataUser = $security->getUser();
         // Récupération de l'identifiant de l'utilisateur connecté
-        $id = $dataUser->getId();
+        $id = $security->getUser()->getId();
         
         
         $user = $entityManager->getRepository(User::class)->find($id);
@@ -62,14 +61,12 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/delete', name: 'account_delete')]
+    #[Route('/delete/account', name: 'account_delete')]
     public function delete(Security $security, EntityManagerInterface $entityManager,)
     {
-
-        $dataUser = $security->getUser();
-
         // Récupération de l'identifiant de l'utilisateur connecté
-        $id = $dataUser->getId();
+        $id = $security->getUser()->getId();
+        
         $user = $entityManager->getRepository(User::class)->find($id);
         $entityManager->remove($user);
         $entityManager->flush();
@@ -77,5 +74,7 @@ class AccountController extends AbstractController
         return $this->redirectToRoute('app_login');
         
     }
+    
+    
 
 }
