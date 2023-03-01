@@ -30,7 +30,7 @@ class RequestType extends AbstractType
                 'choices' => [
                     'Télétravail' => 'Télétravail',
                     'Présentiel' => 'Présentiel',
-                    'Congées' => 'Congées',
+                    'Congés' => 'Congés',
                     'RTT' => 'RTT',
                     'Formation' => 'Formation',
                     'Congés maladies' => 'Congés maladies',
@@ -66,20 +66,6 @@ class RequestType extends AbstractType
                 ],
                 'required' => false,
             ])
-            // ->add('half_day', ChoiceType::class, [
-            //     'choices' => [
-            //         'Matin' => 0,
-            //         'Après-midi' => 1,
-            //     ],
-            //     'expanded' => true,
-            //     'multiple' => false,
-            //     'label_attr' => [
-            //         'class' => 'form-check-label',
-            //     ],
-            //     'attr' => [
-            //         'class' => 'form-check-input',
-            //     ],
-            // ])
             ->add('half_day', ChoiceType::class, [
                 'choices' => [
                     'Matin' => 'Matin',

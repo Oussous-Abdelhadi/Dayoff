@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{# {% import '@KnpPaginator/Pagination/twig.html' as knp_pagination %} #}
 
 {% block body %}
 
@@ -8,6 +9,47 @@
 
 <div class="card">
   <h5 class="card-header">Vos demandes</h5>
+      
+  {% set type = app.request.query.get('type') %}
+  {% set status = app.request.query.get('status') %}
+  {% set date = app.request.query.get('date') %}
+  <div class="card-body">
+    <div class="demo-inline-spacing ">
+      <div class="input-group input-group-merge">
+        <a class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></a>
+        <input type="text" class="form-control" placeholder="Rechercher votre demande par type" aria-label="Search..." aria-describedby="basic-addon-search31">
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Date</button>
+        <ul class="dropdown-menu" style="">
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'ASC', 'status': status, 'type' : type}) }}">Odre croissant</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'DESC', 'status': status, 'type' : type})  }}">Ordre décroissant</a></li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Type</button>
+        <ul class="dropdown-menu" style="">
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Télétravail', 'status': status, 'date' : date}) }}">Télétravail</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Présentiel', 'status': status, 'date' : date}) }}">Présentiel</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés', 'status': status, 'date' : date}) }}">Congés</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'RTT', 'status': status, 'date' : date}) }}">RTT</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Formation', 'status': status, 'date' : date}) }}">Formation</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés maladies', 'status': status, 'date' : date}) }}">Congés maladies</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés parentaux', 'status': status, 'date' : date}) }}">Congés parentaux</a></li>
+        </ul>
+      </div>
+      <div class="btn-group" id="status-dropdown">
+        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Statut</button>
+        <ul class="dropdown-menu" style="">
+          <li><a class="dropdown-item" href="{{ path('home') }}">Tous</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'En attente', 'type': type, 'date' : date}) }}">En attente</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Accepté', 'type': type, 'date' : date}) }}">Accepté</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Refusé', 'type': type, 'date' : date}) }}">Refusé</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
   <div class="table-responsive text-nowrap">
     <table class="table table-hover">
       <thead>
@@ -22,46 +64,44 @@
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
-{% for request in requests %}
-  <tr>
-    <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{request.type}}</strong></td>
-    <td>{{request.startdate|date('d-m-Y')}}</td>
-    <td>{{request.enddate|date('d-m-Y')}}</td>
-    <td>{% if request.halfday == null %}Non{% endif %}{{request.halfday}}</td>
-    <td><span class="badge {% if request.status == 'validé' %}bg-label-success{% elseif request.status == 'refusé' %}bg-label-danger{% else %}bg-label-primary{% endif %} me-1">{{request.status}}</span></td>
-    <td>{% if request.comment|length > 40 %}{{request.comment|slice(0,40)}}...{% else %}{{request.comment}}{% endif %}</td>
-    <td>
-      <div class="dropdown">
-        {% if request.status == 'en attente' %}
-          <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{{ path('edit_request', {'id': request.id}) }}" ><i class="bx bx-edit-alt me-1"></i> Modifier</a>
-            <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Supprimer</a>
-          </div>
-        {% else %}
-          <button type="button" class="btn p-0 dropdown-toggle hide-arrow disabled" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="javascript:void(0);" disabled><i class="bx bx-edit-alt me-1"></i> Modifier</a>
-            <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Supprimer</a>
-          </div>
-        {% endif %}
-      </div>
-    </td>
-  </tr>
-{% endfor %}
-
+      {% for request in pagination %}
+        <tr>
+          <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{request.type}}</strong></td>
+          <td>{{request.startdate|date('d-m-Y')}}</td>
+          <td>{{request.enddate|date('d-m-Y')}}</td>
+          <td>{% if request.halfday == null %}Non{% endif %}{{request.halfday}}</td>
+          <td><span class="badge {% if request.status == 'Accepté' %}bg-label-success{% elseif request.status == 'Refusé' %}bg-label-danger{% else %}bg-label-primary{% endif %} me-1">{{request.status}}</span></td>
+          <td>{% if request.comment|length > 40 %}{{request.comment|slice(0,40)}}...{% else %}{{request.comment}}{% endif %}</td>
+          <td>
+            <div class="dropdown">
+              {% if request.status == 'En attente' %}
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{ path('edit_request', {'id': request.id}) }}" ><i class="bx bx-edit-alt me-1"></i> Modifier</a>
+                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Supprimer</a>
+                </div>
+              {% else %}
+                <button type="button" class="btn p-0 dropdown-toggle hide-arrow disabled" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="javascript:void(0);" disabled><i class="bx bx-edit-alt me-1"></i> Modifier</a>
+                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Supprimer</a>
+                </div>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
       </tbody>
     </table>
-<nav aria-label="...">
-  <ul class="pagination pagination-sm">
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1">1</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-  </ul>
-</nav>
   </div>
+    <div class="card-body">
+      <div class="pagination pagination-sm">
+          {{ knp_pagination_render(
+              pagination
+          ) }}
+
+      </div>
+    </div>
 </div>
 
 {% endblock %}

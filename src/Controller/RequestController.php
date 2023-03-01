@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormError;
 
 
 class RequestController extends AbstractController
@@ -33,13 +34,22 @@ class RequestController extends AbstractController
         $myRequest = new Request();
         $requestForm = $this->createForm(RequestType::class, $myRequest);
         $requestForm->handleRequest($httpRequest);
+
+        
         if ($requestForm->isSubmitted()) {
-
-            $myRequest->setUser($user);
-            $myRequest->setStatus('en attente');
-            $this->entityManager->persist($myRequest);
-            $this->entityManager->flush();
-
+            $startDate = $myRequest->getStartDate();
+            $endDate = $myRequest->getEndDate();
+        
+            if ($startDate > $endDate) {
+                $requestForm->get('endDate')->addError(new FormError("La date de fin doit être postérieure à la date de début"));
+            } else {
+                $myRequest->setUser($user);
+                $myRequest->setStatus('En attente');
+                $this->entityManager->persist($myRequest);
+                $this->entityManager->flush();
+        
+                return $this->redirectToRoute('home');
+            }
         }
 
         return $this->render('request/index.html.twig', [
@@ -55,7 +65,7 @@ class RequestController extends AbstractController
         if (!$myRequest) {
             throw $this->createNotFoundException('Unable to find request with id ' . $id);
         }
-        if ($myRequest->getStatus() == 'en attente')  {
+        if ($myRequest->getStatus() == 'En attente')  {
             $form = $this->createForm(RequestType::class, $myRequest);
             $form->handleRequest($httpRequest);
     
