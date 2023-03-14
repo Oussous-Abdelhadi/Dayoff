@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Request;
 use App\Form\RequestType;
+use App\Service\Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,17 +19,19 @@ class RequestController extends AbstractController
 {
 
     private $entityManager;
+    private $mailer;
 
-    public function __construct(EntityManagerInterface $entityManager){
+    public function __construct(EntityManagerInterface $entityManager, Mailer $mailer){
+        $this->mailer = $mailer;
         $this->entityManager = $entityManager;
     }
 
     #[Route('/demande', name: 'app_request')]
     public function index(HttpRequest $httpRequest, Security $security)
-    {
+    {   
+        
         // Récupération de l'identifiant de l'utilisateur connecté
         $id = $security->getUser()->getId();
-        
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
         $myRequest = new Request();
@@ -47,6 +50,28 @@ class RequestController extends AbstractController
                 $myRequest->setStatus('En attente');
                 $this->entityManager->persist($myRequest);
                 $this->entityManager->flush();
+
+
+                $managers = [];
+
+                $userRepository = $this->entityManager->getRepository(User::class);
+                $users = $userRepository->findAll();
+                
+                foreach ($users as $us) {
+                    $roles = $us->getRoles();
+                    if (in_array("ROLE_MANAGER", $roles) && $us->getTeam() == $user->getTeam()) {
+                        $managers[] = $us;
+                    }
+                }
+
+                $requestType = $myRequest->getType();
+                try {
+                    $this->mailer->sendRequestNotificationEmail($managers, $user, $myRequest, $requestType);
+                    $this->addFlash("success",
+                        "Demande réussie ! Vos managers seront notifiés par email de votre demande.");
+                } catch (\Exception $e) {
+                    $this->addFlash("error", "Une erreur s'est produite lors de l'envoi de votre demande.");
+                }
         
                 return $this->redirectToRoute('home');
             }
@@ -82,4 +107,32 @@ class RequestController extends AbstractController
             'requestForm' => $form->createView()
         ]);
     }    
+
+    #[Route('/requests/{id}/delete', name: 'delete_request')]
+    public function deleteRequest(HttpRequest $httpRequest, Request $request, int $id): Response
+    {
+
+        $myRequest = $this->entityManager->getRepository(Request::class)->find($id);
+        if (!$myRequest) {
+            throw $this->createNotFoundException('Unable to find request with id ' . $id);
+        }
+
+        $submittedToken = $httpRequest->request->get('_token');
+        $type = $myRequest->getType();
+        if ($this->isCsrfTokenValid('delete_request', $submittedToken)) {
+            $this->entityManager->remove($myRequest);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', "Votre demande de $type à été supprimée avec succès.");
+
+            return $this->redirectToRoute('home');
+        }
+
+        // Afficher la boîte de dialogue de confirmation
+        return $this->render('request/confirm_delete.html.twig', [
+            'request' => $myRequest,
+        ]);
+    }
 }
+
+?>

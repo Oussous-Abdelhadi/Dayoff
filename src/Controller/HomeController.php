@@ -48,20 +48,6 @@ class HomeController extends AbstractController
             'pagination' => $pagination,
         ]);
     }
-
-
-    #[Route('/delete/request', name: 'request_delete')]
-    public function delete()
-    {
-        // Récupération de l'identifiant de l'utilisateur connecté
-        $id = $security->getUser()->getId();
-
-        $request = $this->entityManager->getRepository(Request::class)->findBy(['user' => $id]);
-        $this->entityManager->remove($request);
-        $this->entityManager->flush();
-        
-        return $this->redirectToRoute('home');
-    }
     
     #[Route('/filtrer', name: 'request_filter')]
     public function fitrer(HttpRequest $httpRequest,
@@ -79,30 +65,40 @@ class HomeController extends AbstractController
         $status = $httpRequest->query->get('status'); // Récupérer le statut depuis l'URL
         $type = $httpRequest->query->get('type'); 
         $date = $httpRequest->query->get('date'); 
-        
+        $startDate = $httpRequest->query->get('startDate');
+        $endDate = $httpRequest->query->get('endDate');
+
+        $tab = [$startDate, $endDate, $date, $status, $type];
         // Récupération des requêtes avec tri par date de début décroissante
         $queryBuilder = $entityManager->createQueryBuilder()
         ->select('r')
         ->from(Request::class, 'r')
         ->where('r.user = :userId')
         ->setParameter('userId', $id);
-        
 
-        if ($status !== null) {
+        if ($status !== null && $status !== '') {
             $queryBuilder->andWhere('r.status = :status')
                 ->setParameter('status', $status);
         }
         
-        if ($type !== null) {
+        if ($type !== null && $type !== '') {
             $queryBuilder->andWhere('r.type = :type')
                 ->setParameter('type', $type);
         }
 
-        if ($date !== null) {
+        if ($date !== null && $date !== '') {
             $queryBuilder->orderBy('r.start_date', $date);
         }
 
-        // {{ path('request_filter', {'type': 'Télétravail', 'status': app.request.query.get('status')}) }}
+        if ($startDate !== null && $startDate !== '') {
+            $queryBuilder->andWhere('r.start_date >= :startDate')
+                ->setParameter('startDate', $startDate);
+        }       
+
+        if ($endDate !== null && $endDate !== '') {
+            $queryBuilder->andWhere('r.end_date <= :endDate')
+                ->setParameter('endDate', $endDate);
+        }  
     
         // Récupération des requêtes avec pagination
         $pagination = $paginator->paginate(

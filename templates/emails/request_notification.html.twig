@@ -1,0 +1,6 @@
+<p>Bonjour,</p>
+
+<p>{{ user.getFirstName() }} {{ user.getName() }} vous a envoyé une demande de "{{ request.getType() }}" pour la période du {{ request.getStartDate()|date('d/m/Y') }} au {{ request.getEndDate()|date('d/m/Y') }}.</p>
+
+<p>Cordialement,<br>
+L'équipe [DayOff]</p>

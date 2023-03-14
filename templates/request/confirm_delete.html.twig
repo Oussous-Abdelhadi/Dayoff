@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="card mb-4">
+    <div class="card-body">
+    <h5 class="card-title">Supprimer la demande de {{ request.type }} </h5>
+    <div class="card-subtitle text-muted mb-3">Information de la demande</div>
+    <p class="card-text">
+        Date du {{ request.startdate|date('d-m-Y') }} au {{ request.enddate|date('d-m-Y') }}
+    </p>
+    <p class="card-text">
+        {% if request.halfday %}
+            Demi journée : "{{request.halfday}}"
+        {% endif %}
+    </p>
+    <p class="card-text">
+        {% if request.comment %}
+            Commentaire : "{{request.comment}}"
+        {% endif %}
+    </p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+    <h5 class="card-title">Êtes-vous sûr de vouloir supprimer cette demande ?</h5>
+    <form action="{{ path('delete_request', {'id': request.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete_request') }}">
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    </form>
+    </div>
+</div>
+{% endblock %}

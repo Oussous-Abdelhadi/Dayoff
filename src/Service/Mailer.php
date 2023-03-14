@@ -31,4 +31,28 @@ class Mailer
         ;
         $this->mailer->send($email);
     }
+
+    public function sendRequestNotificationEmail($managers, $user, $request, $requestType)
+    {
+        // Build the email message
+        $email = (new TemplatedEmail())
+            ->from('dadi94230@hotmail.fr')
+            ->subject('Nouvelle demande de ' . $requestType)
+            ->htmlTemplate('emails/request_notification.html.twig')
+            ->context([
+                'user' => $user,
+                'request' => $request,
+            ]);
+    
+        // Add all the managers as recipients
+        foreach ($managers as $manager) {
+            $email->addTo($manager->getEmail());
+        }
+    
+        // Send the email
+        $this->mailer->send($email);
+    }
+    
 }
+
+?>

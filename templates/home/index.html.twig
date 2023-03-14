@@ -1,5 +1,4 @@
 {% extends "base.html.twig" %}
-{# {% import '@KnpPaginator/Pagination/twig.html' as knp_pagination %} #}
 
 {% block body %}
 
@@ -8,45 +7,104 @@
 </h4>
 
 <div class="card">
+
   <h5 class="card-header">Vos demandes</h5>
       
   {% set type = app.request.query.get('type') %}
   {% set status = app.request.query.get('status') %}
   {% set date = app.request.query.get('date') %}
+  {% set startDate = app.request.get('startDate') %}
+  {% set endDate = app.request.query.get('endDate') %}
   <div class="card-body">
-    <div class="demo-inline-spacing ">
-      <div class="input-group input-group-merge">
-        <a class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></a>
-        <input type="text" class="form-control" placeholder="Rechercher votre demande par type" aria-label="Search..." aria-describedby="basic-addon-search31">
+
+  {% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+  {% endfor %}
+
+  <form action="{{ path('request_filter', {'date': date, 'status': status, 'type' : type}) }}" method="get">
+    <div class="row gx-3 gy-2 align-items-center">
+      <div class="col-md-3">
+        <label for="startDate" class="form-label">Date de début</label>
+        <input class="form-control" type="date" name="startDate" id="startDate" value="{{startDate}}">    
       </div>
+      <div class="col-md-3">
+        <label for="endDate" class="form-label">Date de fin</label>
+        <input class="form-control" type="date" name="endDate" id="endDate" value="{{endDate}}">    
+      </div>
+      <div class="col-md-3">
+        <label class="form-label" for="submit">&nbsp;</label>
+        <button type="submit" id="submit" class="btn btn-primary d-block">Rechercher</button>
+      </div>
+      <input type="hidden" name="status" value="{{ status }}">
+      <input type="hidden" name="type" value="{{ type }}">
+      <input type="hidden" name="date" value="{{ date }}">
+
+    </div>
+  </form>
+
+    <div class="demo-inline-spacing ">
       <div class="btn-group">
         <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Date</button>
         <ul class="dropdown-menu" style="">
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'ASC', 'status': status, 'type' : type}) }}">Odre croissant</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'DESC', 'status': status, 'type' : type})  }}">Ordre décroissant</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'ASC', 'status': status, 'type' : type, 'startDate' : startDate, 'endDate' : endDate}) }}">Odre croissant</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'date': 'DESC', 'status': status, 'type' : type, 'startDate' : startDate, 'endDate' : endDate})  }}">Ordre décroissant</a></li>
         </ul>
       </div>
       <div class="btn-group">
         <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Type</button>
         <ul class="dropdown-menu" style="">
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Télétravail', 'status': status, 'date' : date}) }}">Télétravail</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Présentiel', 'status': status, 'date' : date}) }}">Présentiel</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés', 'status': status, 'date' : date}) }}">Congés</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'RTT', 'status': status, 'date' : date}) }}">RTT</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Formation', 'status': status, 'date' : date}) }}">Formation</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés maladies', 'status': status, 'date' : date}) }}">Congés maladies</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés parentaux', 'status': status, 'date' : date}) }}">Congés parentaux</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Télétravail', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Télétravail</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Présentiel', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Présentiel</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Congés</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'RTT', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">RTT</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Formation', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Formation</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés maladies', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Congés maladies</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'type': 'Congés parentaux', 'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Congés parentaux</a></li>
         </ul>
       </div>
       <div class="btn-group" id="status-dropdown">
         <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Statut</button>
         <ul class="dropdown-menu" style="">
           <li><a class="dropdown-item" href="{{ path('home') }}">Tous</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'En attente', 'type': type, 'date' : date}) }}">En attente</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Accepté', 'type': type, 'date' : date}) }}">Accepté</a></li>
-          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Refusé', 'type': type, 'date' : date}) }}">Refusé</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'En attente', 'type': type, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">En attente</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Accepté', 'type': type, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Accepté</a></li>
+          <li><a class="dropdown-item" href="{{ path('request_filter', {'status': 'Refusé', 'type': type, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}">Refusé</a></li>
         </ul>
-      </div>
+      </div>      
+    </div>
+    <div class="demo-inline-spacing">
+      {% if date == "ASC" %}
+        <a class="btn btn-sm btn-primary me-1"  href="{{ path('request_filter', {'status': status, 'type' : type, 'startDate' : startDate, 'endDate' : endDate}) }}">
+          X &nbsp; Date par ordre croissant
+        </a>
+      {% endif %}
+      {% if date == "DESC" %}
+        <a class="btn btn-sm btn-primary me-1" href="{{ path('request_filter', {'status': status, 'type' : type, 'startDate' : startDate, 'endDate' : endDate}) }}">
+          X &nbsp; Date par ordre décroissant
+        </a>
+      {% endif %}
+      {% if type %}
+        <a class="btn btn-sm btn-primary me-1"  href="{{ path('request_filter', {'status': status, 'date' : date, 'startDate' : startDate, 'endDate' : endDate}) }}" >
+          X &nbsp; {{type}}
+        </a>
+      {% endif %}
+      {% if status %}
+        <a class="btn btn-sm btn-primary me-1" href="{{ path('request_filter', {'date': date, 'type' : type, 'startDate' : startDate, 'endDate' : endDate}) }}">
+          X &nbsp; {{status}}
+        </a>
+      {% endif %}
+      {% if startDate %}
+        <a class="btn btn-sm btn-primary me-1" href="{{ path('request_filter', {'status' : status, 'date': date, 'type' : type, 'endDate' : endDate}) }}">
+          X &nbsp; {{startDate|date("d/m/Y")}}
+        </a>
+      {% endif %}
+      {% if endDate %}
+        <a class="btn btn-sm btn-primary me-1" href="{{ path('request_filter', {'status' : status, 'date': date, 'type' : type, 'startDate' : startDate}) }}">
+          X &nbsp; {{endDate|date("d/m/Y")}}
+        </a>
+      {% endif %}
     </div>
   </div>
   
@@ -78,8 +136,7 @@
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="{{ path('edit_request', {'id': request.id}) }}" ><i class="bx bx-edit-alt me-1"></i> Modifier</a>
-                  <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Supprimer</a>
-                </div>
+                  <a class="dropdown-item" href="{{ path('delete_request', {'id': request.id}) }}"><i class="bx bx-trash me-1"></i>Supprimer</a>
               {% else %}
                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow disabled" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                 <div class="dropdown-menu">
@@ -103,5 +160,7 @@
       </div>
     </div>
 </div>
+
+
 
 {% endblock %}

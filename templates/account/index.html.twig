@@ -109,12 +109,10 @@
 
                 <div class="modal-footer">
                   <form action="{{ path('account_delete') }}" method="POST">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_account') }}">
+                    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                    <input type="hidden" name="_token" value="{{ csrf_token('account_delete') }}">
                   </form>
                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                  {# <button type="reset" class="btn btn-outline-secondary" >Annuler</button> #}
-
                 </div>
               </div>
             </div>

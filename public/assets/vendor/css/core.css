@@ -15277,15 +15277,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
 .content-backdrop.fade {
   z-index: -1;
 }
-@media (max-width: 1200px) {
-  #layout-navbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
-  } 
-}
+
 .layout-navbar {
   position: relative;
   padding-top: 0.25rem;
