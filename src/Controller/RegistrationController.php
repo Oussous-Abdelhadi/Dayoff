@@ -56,7 +56,7 @@ class RegistrationController extends AbstractController
                         )
                     );
                 $user->setRoles(
-                    ['ROLE_USER']
+                    ['ROLE_MANAGER']
                 );
                 $team = new Team();
                 $entityManager->persist($team);

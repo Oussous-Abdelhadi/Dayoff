@@ -73,12 +73,11 @@
               </div>
               <!-- /Logo -->
             <p class="mb-4">
-                Si un compte correspondant à votre adresse e-mail existe, alors un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.
+                Si un compte associé à votre adresse e-mail existe, un e-mail contenant un lien pour réinitialiser votre mot de passe vient d'être envoyé. Ce lien sera valide pendant 1 heure.
                 <br>
                 Ce lien expirera dans 1 heure.
             </p>
-            {# {{ resetToken.expirationMessageKeyFr|trans(resetToken.expirationMessageData, 'ResetPasswordBundleFr') }} #}
-            <p class="mb-4">Si vous ne recevez pas d'e-mail, vérifiez votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
+            <p class="mb-4">Si vous ne recevez pas cet e-mail, veuillez vérifier votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">essayer à nouveau</a>.</p>
 
             </div>
           </div>

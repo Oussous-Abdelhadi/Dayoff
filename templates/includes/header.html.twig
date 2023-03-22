@@ -94,6 +94,14 @@
                 <div data-i18n="Request">Demandes</div>
               </a>
             </li>
+            <li class="menu-item {% if app.request.attributes.get('_route') == 'app_invitation' %}
+                active
+              {% endif %} ">
+              <a href="{{path('app_invitation')}}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-user-plus'></i>
+                <div data-i18n="Resume request">Invitation</div>
+              </a>
+            </li>
             <li class="menu-item 
               {% if app.request.attributes.get('_route') == 'app_account' %}
                 active
@@ -101,12 +109,6 @@
               <a href="{{path('app_account')}}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-user'></i>
                 <div data-i18n="Resume request">Mon Compte</div>
-              </a>
-            </li>
-            <li class="menu-item " id="toggle-dark-mode">
-              <a href="" class="menu-link">
-                <i class='menu-icon tf-icons bx bx-user'></i>
-                <div data-i18n="Resume request">Dark Mode</div>
               </a>
             </li>
             <li class="menu-item">

@@ -1,0 +1,12 @@
+    <p>Cher utilisateur,</p>
+    <p>Vous avez été invité à rejoindre l'équipe de {{ manager.getFirstName() }} {{ manager.getName() }}. DayOff est une application de gestion de vos modalités de travail qui vous permettront de les gérer facilement.</p>
+    <p>Pour confirmer votre compte et accéder à l'application, veuillez cliquer sur le lien ci-dessous :</p>
+    {% if user %}
+        <p><a href="{{url('app_register', {"team": team})}}">Lien pour rejoindre l'application</a></p>
+        {% else %}
+        <p><a href="{{url('app_team', {"team": team})}}">Lien pour rejoindre l'équipe</a></p>
+    {% endif %}
+    <p>Si vous avez des questions ou des préoccupations, n'hésitez pas à nous contacter à l'adresse e-mail suivante : support@dayoff.com.</p>
+    <p>Merci d'avoir choisi notre service. Nous sommes impatients de vous fournir une expérience de qualité.</p>
+    <p>Cordialement,<br>
+    L'équipe [DayOff]</p>

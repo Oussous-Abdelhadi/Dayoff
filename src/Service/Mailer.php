@@ -2,16 +2,21 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Mailer
 {
     private $mailer;
-    public function __construct(MailerInterface $mailer)
+    private $entityManager;
+
+    public function __construct(MailerInterface $mailer, EntityManagerInterface $entityManager)
     {
         $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
     }
 
     public function sendEmail($usermail, $token)
@@ -20,11 +25,7 @@ class Mailer
             ->from('dadi94230@hotmail.fr')
             ->to(new Address($usermail))
             ->subject('[DayOff] Confirmation de compte !')
-        
-            // path of the Twig template to render
             ->htmlTemplate('emails/registration.html.twig')
-        
-            // pass variables (name => value) to the template
             ->context([
                 'token' => $token,
             ])
@@ -34,10 +35,10 @@ class Mailer
 
     public function sendRequestNotificationEmail($managers, $user, $request, $requestType)
     {
-        // Build the email message
+    
         $email = (new TemplatedEmail())
             ->from('dadi94230@hotmail.fr')
-            ->subject('Nouvelle demande de ' . $requestType)
+            ->subject('[DayOff] Nouvelle demande de ' . $requestType)
             ->htmlTemplate('emails/request_notification.html.twig')
             ->context([
                 'user' => $user,
@@ -49,10 +50,60 @@ class Mailer
             $email->addTo($manager->getEmail());
         }
     
-        // Send the email
+        $this->mailer->send($email);
+    }
+
+    public function sendInvitationEmail($usermail, $manager, $team)
+    {
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $usermail,
+        ]);
+
+    
+        $email = (new TemplatedEmail())
+            ->from('dadi94230@hotmail.fr')
+            ->to(new Address($usermail))
+            ->subject('[DayOff] Invitation à rejoindre mon équipe')
+            ->htmlTemplate('emails/invitation.html.twig')
+            ->context([
+                'manager' => $manager,
+                'team' => $team,
+                'user' => $user,
+            ]);
+
         $this->mailer->send($email);
     }
     
+
+    public function sendAgreedRequestEmail($usermail, $request, $requestType)
+    {
+    
+        $email = (new TemplatedEmail())
+            ->from('dadi94230@hotmail.fr')
+            ->to(new Address($usermail))
+            ->subject('[DayOff] Votre demande de ' . $requestType . ' à été accepté !')
+            ->htmlTemplate('emails/request_agreed.html.twig')
+            ->context([
+                'request' => $request,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendDeniedRequestEmail($usermail, $request, $requestType)
+    {
+    
+        $email = (new TemplatedEmail())
+            ->from('dadi94230@hotmail.fr')
+            ->to(new Address($usermail))
+            ->subject('[DayOff] Votre demande de ' . $requestType . ' à été refusé.')
+            ->htmlTemplate('emails/request_denied.html.twig')
+            ->context([
+                'request' => $request,
+            ]);
+
+        $this->mailer->send($email);
+    }
 }
 
 ?>

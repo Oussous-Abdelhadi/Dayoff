@@ -51,19 +51,14 @@ class RequestController extends AbstractController
                 $this->entityManager->persist($myRequest);
                 $this->entityManager->flush();
 
-
-                $managers = [];
-
-                $userRepository = $this->entityManager->getRepository(User::class);
-                $users = $userRepository->findAll();
-                
-                foreach ($users as $us) {
-                    $roles = $us->getRoles();
-                    if (in_array("ROLE_MANAGER", $roles) && $us->getTeam() == $user->getTeam()) {
-                        $managers[] = $us;
-                    }
-                }
-
+                $managers = $this->entityManager->getRepository(User::class)->createQueryBuilder('u')
+                ->where('u.roles LIKE :roles')
+                ->andWhere('u.team = :team')
+                ->setParameter('roles', '%"ROLE_MANAGER"%')
+                ->setParameter('team', $user->getTeam())
+                ->getQuery()
+                ->getResult();
+            
                 $requestType = $myRequest->getType();
                 try {
                     $this->mailer->sendRequestNotificationEmail($managers, $user, $myRequest, $requestType);
@@ -123,7 +118,7 @@ class RequestController extends AbstractController
             $this->entityManager->remove($myRequest);
             $this->entityManager->flush();
 
-            $this->addFlash('success', "Votre demande de $type à été supprimée avec succès.");
+            $this->addFlash('success', "Votre demande de $type a été supprimée avec succès.");
 
             return $this->redirectToRoute('home');
         }
